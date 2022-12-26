@@ -9,13 +9,18 @@
     - { name: "pro_nfs_volume",          prompt: "Please enter , NFS Volume Name for VMware Datastore",  private: no,      default: "nfsdatastore01" }
     - { name: "pro_vcenter_ip",          prompt: "Please enter , vCenter IP Address",                    private: no,      default: "xxx.xxx.xxx.xxx" }
     - { name: "pro_vcenter_user",        prompt: "Please enter , vCenter User ID",                       private: no,      default: "administrator@vsphere.local" }
-    - { name: "pro_vcenter_pass",        prompt: "Please enter ,vCenter User Password ",                 private: yes,      default: "password" }
+    - { name: "pro_vcenter_pass",        prompt: "Please enter ,vCenter User Password ",                 private: yes,     default: "password" }
     - { name: "pro_datacenter_name",     prompt: "Please enter , DataCenter Name",                       private: no,      default: "dc01" }
     - { name: "pro_cluster_name",        prompt: "Please enter , Cluster Name",                          private: no,      default: "vc01" }
     - { name: "pro_resource_pool",       prompt: "Please enter , Resource Pool Name",                    private: no,      default: "rp01" }
     - { name: "pro_vm_folder",           prompt: "Please enter , VM Folder",                             private: no,      default: "vmfolder01" }
     - { name: "pro_datastore_name",      prompt: "Please enter , DataStore Name",                        private: no,      default: "nfsdatastore01" }
   tasks:
+    - name: directory create 
+      ansible.builtin.file: path="{{ item.dest_dir }}" state=directory mode=755
+      with_items:
+        - "{{ file_name_list }}"
+
     - name: create file from Jinja2 template List1
       template:
         src="../templates/{{ item.file_name }}.j2"
