@@ -1,0 +1,14 @@
+- name: template
+  import_playbook: template.yaml
+
+- name: mount datastore volume
+  import_playbook: mount.yaml
+
+- name: list create
+  import_playbook: vmlist.yaml
+
+- name: unmount datastore volume
+  import_playbook: unmount.yaml
+
+- name: register inventory
+  import_playbook: inventory.yaml

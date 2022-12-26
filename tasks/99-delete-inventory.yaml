@@ -1,0 +1,48 @@
+---
+- name: register vm inventory 
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - ../vars/info.yaml
+    - ../vars/vmlist.yaml
+  tasks:
+    - name: unRegister VM in resource pool
+      community.vmware.vmware_guest_register_operation:
+        hostname     	: '{{ vcenter_ip }}'
+        username     	: '{{ vcenter_user }}'
+        password      	: '{{ vcenter_pass }}'
+        datacenter    	: '{{ datacenter_name }}'
+        folder         	: "{{ datacenter_name }}/vm/{{ vm_folder }}"
+        cluster        	: '{{ cluster_name }}'
+        resource_pool 	: '{{ resource_pool }}'
+        name	        : "{{ item.vm_name }}"
+        template	: false
+        path		: "{{ item.vm_path }}"
+        state		: absent
+        validate_certs	: False
+      with_items:
+        - "{{ inventory_vm_list }}"
+
+    - name: delete vm folder 
+      community.vmware.vcenter_folder:
+        hostname      : '{{ vcenter_ip }}'
+        username      : '{{ vcenter_user }}'
+        password      : '{{ vcenter_pass }}'
+        datacenter    : '{{ datacenter_name }}'
+        folder_name   : '{{ vm_folder }}'
+        folder_type   : vm
+        validate_certs: False
+        state		: absent
+      delegate_to: localhost
+
+    - name: delete resource pool 
+      community.vmware.vmware_resource_pool:
+        hostname      : '{{ vcenter_ip }}'
+        username      : '{{ vcenter_user }}'
+        password      : '{{ vcenter_pass }}'
+        datacenter    : '{{ datacenter_name }}'
+        cluster       : '{{ cluster_name }}'
+        resource_pool : '{{ resource_pool }}'
+        validate_certs: False
+        state		: absent
+      delegate_to: localhost

@@ -1,0 +1,13 @@
+- name: NFS UnMount
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - ../vars/info.yaml
+  tasks:
+    - name: vm unmount nfs dir 
+      ansible.posix.mount:
+        path: "{{ nfs_mount_dir }}"
+        src: "{{ nfs_ip }}:/{{ nfs_volume }}"
+        fstype: nfs
+#        opts: _netdev
+        state: absent

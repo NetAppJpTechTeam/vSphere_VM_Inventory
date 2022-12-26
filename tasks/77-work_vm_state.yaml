@@ -1,0 +1,26 @@
+---
+- name: work vm state
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - ../vars/info.yaml
+    - ../vars/vmlist.yaml
+  vars_prompt:
+    - { name: "pro_vm_state",   prompt: "Please enter , VM State(powered-on / powered-off / shutdown-guest)",   private: no,      default: "powered-on" }
+    - { name: "pro_vm_state_force",   prompt: "Please enter , whether to force the VM State Action ( true / false )",   private: no,      default: "false" }
+  tasks:
+    - name: work vm sate 
+      community.vmware.vmware_guest:
+        state         : "{{ pro_vm_state }}"
+        force         : "{{ pro_vm_state_force }}"
+        hostname      : "{{ vcenter_ip }}"
+        username      : "{{ vcenter_user }}"
+        password      : "{{ vcenter_pass }}"
+        validate_certs: False
+        name          : "{{ item.vm_name }}"
+        datacenter    : "{{ datacenter_name }}"
+        folder        : "{{ datacenter_name }}/vm/{{ vm_folder }}"
+        cluster       : "{{ cluster_name }}"
+        resource_pool : "{{ resource_pool }}"
+      with_items:
+        - "{{ inventory_vm_list }}"

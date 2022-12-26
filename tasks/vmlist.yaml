@@ -1,0 +1,24 @@
+---
+- name: test
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+     ../vars/info.yaml
+  tasks:
+    - name: vm find all vm directory
+      find:
+        paths: "/tmp/temporary_it301"
+        file_type: directory
+      register: found_devices
+
+    - name: create file from Jinja2 template List1
+      template:
+        src="../templates/vmlist.yaml.j2"
+        dest="../vars/vmlist.yaml"
+        backup=true
+
+    - name: insert vm list to vmlist.yaml
+      lineinfile:
+        path  : ../vars/vmlist.yaml
+        line  : "  - { vm_name: {{ item.1.path | regex_replace( '/tmp/temporary_it301/','') }}, vm_path: \"[{{ datastore_name }}] {{ item.1.path | regex_replace( '/tmp/temporary_it301/','') }}/{{ item.1.path | regex_replace( '/tmp/temporary_it301/','') }}.vmx\" }"
+      with_indexed_items: '{{ found_devices.files }}'

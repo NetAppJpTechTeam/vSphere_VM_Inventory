@@ -1,0 +1,19 @@
+---
+#  
+  nfs_mount_dir : "/tmp/temporary_it301"
+
+# NFS DataStore INFO
+  nfs_ip     : {{ pro_nfs_ip }}
+  nfs_volume : {{ pro_nfs_volume }}
+
+# vCenter
+  vcenter_ip        : {{ pro_vcenter_ip }}
+  vcenter_user      : {{ pro_vcenter_user }}
+  vcenter_pass      : {{ pro_vcenter_pass }}
+
+  datacenter_name   : {{ pro_datacenter_name }}
+  cluster_name      : {{ pro_cluster_name }}
+  resource_pool     : {{ pro_resource_pool }} 
+  vm_folder         : {{ pro_vm_folder }}
+
+  datastore_name    : {{ pro_datastore_name }}
